@@ -23,9 +23,7 @@ public class Starbridge
     public init(logger: Logger, config: StarburstConfig)
     {
         self.logger = logger
-        let starburst = Starburst(config)
-        let capabilities = Capabilities(BuiltinModuleNames.display.rawValue, BuiltinModuleNames.random.rawValue, BuiltinModuleNames.networkConnect.rawValue, BuiltinModuleNames.networkListen.rawValue, "Starburst")
-        let sim = Simulation(capabilities: capabilities, userModules: [starburst])
+        let sim = Simulation(capabilities: Capabilities(.display, .random, .networkConnect, .networkListen))
         self.simulation = sim
         self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events)
     }
