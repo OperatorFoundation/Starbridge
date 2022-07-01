@@ -1,0 +1,194 @@
+{
+  "pins" : [
+    {
+      "identity" : "chord",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Chord.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cfc0391d775a76535f9299ca6f6d1ce989b0ce27"
+      }
+    },
+    {
+      "identity" : "datable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Datable",
+      "state" : {
+        "branch" : "main",
+        "revision" : "86118a922137267780fde547fc0b3cf8cd5a3134"
+      }
+    },
+    {
+      "identity" : "ghostwriter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Ghostwriter",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d1bb7eb0ad6d0fefd52d46cb634ca93f6b004efa"
+      }
+    },
+    {
+      "identity" : "keychain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Keychain",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3991515de35b3a35933e4d94d183625d0e58cc56"
+      }
+    },
+    {
+      "identity" : "keychainmacos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/KeychainMacOS.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ee3b8047a7f728c233c9c80abae4a59e46a557df"
+      }
+    },
+    {
+      "identity" : "monolith",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Monolith",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b71c3db745028f20388b39e09c2c04a3d556d8ed"
+      }
+    },
+    {
+      "identity" : "net",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Net",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9e76bf97d943bf04aa1ab5367811094b62bde4c2"
+      }
+    },
+    {
+      "identity" : "replicantswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/ReplicantSwift.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3585b7945237e67d8ea8a95ee92e8efbe70f6e36"
+      }
+    },
+    {
+      "identity" : "shadowswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/ShadowSwift",
+      "state" : {
+        "branch" : "main",
+        "revision" : "22393dfe84d246a6de6ad3241741dc71c4245310"
+      }
+    },
+    {
+      "identity" : "song",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Song",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cb5e5ce897bea90244e73929d21ac5497576595d"
+      }
+    },
+    {
+      "identity" : "spacetime",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Spacetime",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f99a84bd6a6de4fdc087db2c70c432d1cb7ad5fb"
+      }
+    },
+    {
+      "identity" : "swift-ast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/swift-ast.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d7e0cf0d9d3b90831a1c297ce911a338a4bd44f3"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto",
+      "state" : {
+        "revision" : "d9825fa541df64b1a7b182178d61b9a82730d01f",
+        "version" : "2.1.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+        "version" : "1.4.2"
+      }
+    },
+    {
+      "identity" : "swifthextools",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/SwiftHexTools",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3d4b5a925414481ff82fe53b9062560a269c2679"
+      }
+    },
+    {
+      "identity" : "swiftqueue",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/SwiftQueue",
+      "state" : {
+        "branch" : "main",
+        "revision" : "89ba7491f43d36181e3cfa7515ff194e6d2c80c8"
+      }
+    },
+    {
+      "identity" : "transmission",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Transmission",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bbae4f2c3a5a8a2fad49c5279e5889da0148a2c7"
+      }
+    },
+    {
+      "identity" : "transmissionmacos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/TransmissionMacOS",
+      "state" : {
+        "branch" : "main",
+        "revision" : "516c41d689f020092466297ff78956fabb9e7f0f"
+      }
+    },
+    {
+      "identity" : "transmissiontransport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/TransmissionTransport.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "318541767d15fd6905f8b2217392fa7ec7ae467c"
+      }
+    },
+    {
+      "identity" : "transmissiontypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/TransmissionTypes",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f31178150124c2bb570c045a5050944d49fe1fc5"
+      }
+    },
+    {
+      "identity" : "transport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OperatorFoundation/Transport",
+      "state" : {
+        "branch" : "main",
+        "revision" : "0cbd49e3668de97c9e45eb5e464274ee43de871e"
+      }
+    }
+  ],
+  "version" : 2
+}
