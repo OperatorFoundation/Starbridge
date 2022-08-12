@@ -4,6 +4,20 @@ import XCTest
 final class StarbridgeTests: XCTestCase {
     func testConfigs() throws {
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
+        
+        if (!FileManager.default.fileExists(atPath: configDirectory.path))
+        {
+            do
+            {
+                try FileManager.default.createDirectory(atPath: configDirectory.path, withIntermediateDirectories: true)
+            }
+            catch
+            {
+                print("Failed to create the config directory: \(error)")
+                XCTFail()
+            }
+        }
+        
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
         
