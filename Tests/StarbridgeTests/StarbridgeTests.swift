@@ -1,8 +1,13 @@
 import XCTest
+
+import Crypto
+
 @testable import Starbridge
 
-final class StarbridgeTests: XCTestCase {
-    func testConfigs() throws {
+final class StarbridgeTests: XCTestCase
+{
+    func testConfigs() throws
+    {
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
         
         if (!FileManager.default.fileExists(atPath: configDirectory.path))
@@ -18,15 +23,17 @@ final class StarbridgeTests: XCTestCase {
             }
         }
         
+        let keys = generateKeys()
+        
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
         
-        guard let serverConfig = StarbridgeServerConfig(serverPersistentPrivateKey: "dd5e9e88d13e66017eb2087b128c1009539d446208f86173e30409a898ada148", serverIP: "127.0.0.1", port: 1234) else {
+        guard let serverConfig = StarbridgeServerConfig(serverPersistentPrivateKey: keys.privateKey, serverIP: "127.0.0.1", port: 1234) else {
             XCTFail()
             return
         }
         
-        guard let clientConfig = StarbridgeClientConfig(serverPersistantPublicKey: "d089c225ef8cda8d477a586f062b31a756270124d94944e458edf1a9e1e41ed6", serverIP: "127.0.0.1", port: 1234) else {
+        guard let clientConfig = StarbridgeClientConfig(serverPersistantPublicKey: keys.publicKey, serverIP: "127.0.0.1", port: 1234) else {
             XCTFail()
             return
         }
@@ -70,5 +77,21 @@ final class StarbridgeTests: XCTestCase {
         
         XCTAssertEqual(serverConfigData, parsedServerConfigData)
         XCTAssertEqual(clientConfigData, parsedClientConfigData)
+    }
+    
+    func generateKeys() -> (privateKey: String, publicKey: String)
+    {
+        let privateKey = P256.KeyAgreement.PrivateKey()
+        let privateKeyData = privateKey.rawRepresentation
+        let privateKeyHex = privateKeyData.hex
+
+        let publicKey = privateKey.publicKey
+        let publicKeyData = publicKey.compactRepresentation
+        let publicKeyHex = publicKeyData!.hex
+
+        print("Private key: \(privateKeyHex)")
+        print("Public key: \(publicKeyHex)")
+        
+        return(privateKeyHex, publicKeyHex)
     }
 }
