@@ -25,6 +25,9 @@ public struct StarbridgeClientConfig: Codable
         self.replicantConfig = replicantConfig
     }
     
+    /// Initializes StarbridgeClientConfig with the JSON file located at path. Returns nil if the file is not a valid JSON Starbridge config, or if the file does not exist.
+    /// - Parameters:
+    ///     - path: The complete path where the config file is located.
     public init?(withConfigAtPath path: String)
     {
         guard let config = StarbridgeClientConfig.parseJSON(atPath: path)

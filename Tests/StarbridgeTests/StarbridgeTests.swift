@@ -6,6 +6,26 @@ import Crypto
 
 final class StarbridgeTests: XCTestCase
 {
+    func testCreateNewConfigFiles()
+    {
+        let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
+        
+        XCTAssert(Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverIP: "127.0.0.1", serverPort: 1234))
+        
+        let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
+        let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
+        
+        guard StarbridgeServerConfig(withConfigAtPath: serverConfigPath.path) != nil else {
+            XCTFail()
+            return
+        }
+        
+        guard StarbridgeClientConfig(withConfigAtPath: clientConfigPath.path) != nil else {
+            XCTFail()
+            return
+        }
+    }
+    
     func testConfigs() throws
     {
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
