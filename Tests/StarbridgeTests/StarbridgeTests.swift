@@ -6,8 +6,11 @@ import Crypto
 
 final class StarbridgeTests: XCTestCase
 {
+    
+    #if (os(macOS))
     func testCreateNewConfigFiles()
     {
+        // TODO: Add directory for iOS
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
         
         XCTAssert(Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverIP: "127.0.0.1", serverPort: 1234))
@@ -28,6 +31,7 @@ final class StarbridgeTests: XCTestCase
     
     func testConfigs() throws
     {
+        // TODO: Add directory for iOS
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
         
         if (!FileManager.default.fileExists(atPath: configDirectory.path))
@@ -98,6 +102,7 @@ final class StarbridgeTests: XCTestCase
         XCTAssertEqual(serverConfigData, parsedServerConfigData)
         XCTAssertEqual(clientConfigData, parsedClientConfigData)
     }
+    #endif
     
     func generateKeys() -> (privateKey: String, publicKey: String)
     {
