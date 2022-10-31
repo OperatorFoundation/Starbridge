@@ -1,13 +1,84 @@
 import XCTest
 
 import Crypto
+import Logging
+import ReplicantSwift
 
 @testable import Starbridge
 
 final class StarbridgeTests: XCTestCase
 {
-    
     #if (os(macOS))
+    func testStarbridge()
+    {
+        do
+        {
+            let serverSendData = "success".data
+            let clientSendData = "pass".data
+            let (privateKeyHex, publicKeyHex) = generateKeys()
+            
+            let logger = Logging.Logger(label: "Starbridge")
+            let starburstServerConfig = StarburstConfig.SMTPServer
+            let starbridgeServer = Starbridge(logger: logger, config: starburstServerConfig)
+            
+            guard let starbridgeServerConfig = StarbridgeServerConfig(serverPersistentPrivateKey: privateKeyHex, serverIP: "127.0.0.1", port: 1234) else
+            {
+                XCTFail()
+                return
+            }
+            
+            let starbridgeListener = try starbridgeServer.listen(config: starbridgeServerConfig)
+            
+            Task
+            {
+                let starbridgeServerConnection = try starbridgeListener.accept()
+                
+                guard let serverReadData = starbridgeServerConnection.read(size: clientSendData.count) else
+                {
+                    XCTFail()
+                    return
+                }
+                
+                guard starbridgeServerConnection.write(data: serverSendData) else
+                {
+                    XCTFail()
+                    return
+                }
+                
+                XCTAssertEqual(serverReadData.string, clientSendData.string)
+            }
+            
+            let starburstClientConfig = StarburstConfig.SMTPClient
+            let starbridgeClient = Starbridge(logger: logger, config: starburstClientConfig)
+            
+            guard let starbridgeClientConfig = StarbridgeClientConfig(serverPersistantPublicKey: publicKeyHex, serverIP: "127.0.0.1", port: 1234) else
+            {
+                XCTFail()
+                return
+            }
+            
+            let starbridgeClientConnection = try starbridgeClient.connect(config: starbridgeClientConfig)
+            
+            guard starbridgeClientConnection.write(data: clientSendData) else
+            {
+                XCTFail()
+                return
+            }
+            
+            guard let clientReadData = starbridgeClientConnection.read(size: serverSendData.count) else
+            {
+                XCTFail()
+                return
+            }
+            
+            XCTAssertEqual(clientReadData.string, serverSendData.string)
+        }
+        catch
+        {
+            XCTFail()
+        }
+    }
+    
     func testCreateNewConfigFiles()
     {
         // TODO: Add directory for iOS
