@@ -15,13 +15,15 @@ let package = Package(
             targets: ["Starbridge"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift.git", branch: "main")
+        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift.git", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Gardener.git", branch: "main")
     ],
     targets: [
         .target(
             name: "Starbridge",
             dependencies: [
             "ReplicantSwift",
+            "Gardener",
             ]),
         .testTarget(
             name: "StarbridgeTests",

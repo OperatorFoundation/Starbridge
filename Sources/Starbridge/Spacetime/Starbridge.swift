@@ -9,6 +9,7 @@ import Crypto
 import Foundation
 import Logging
 
+import Gardener
 import ReplicantSwift
 import Simulation
 import Spacetime
@@ -105,7 +106,7 @@ public class Starbridge
             let serverConfigFilename = "StarbridgeServerConfig.json"
             let serverConfigFilePath = saveDirectory.appendingPathComponent(serverConfigFilename).path
             
-            guard FileManager.default.createFile(atPath: serverConfigFilePath, contents: serverJson) else
+            guard File.put(serverConfigFilePath, contents: serverJson) else
             {
                 return false
             }
@@ -114,7 +115,7 @@ public class Starbridge
             let clientConfigFilename = "StarbridgeClientConfig.json"
             let clientConfigFilePath = saveDirectory.appendingPathComponent(clientConfigFilename).path
             
-            guard FileManager.default.createFile(atPath: clientConfigFilePath, contents: clientJson) else
+            guard File.put(clientConfigFilePath, contents: clientJson) else
             {
                 return false
             }

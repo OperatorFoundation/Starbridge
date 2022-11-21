@@ -1,5 +1,6 @@
 import Foundation
 
+import Gardener
 import ReplicantSwift
 import ShadowSwift
 
@@ -58,10 +59,9 @@ public struct StarbridgeServerConfig: Codable
     /// - Returns: The StarbridgeServerConfig struct that was decoded from the JSON file located at the provided path, or nil if the file was invalid or missing.
     static public func parseJSON(atPath path: String) -> StarbridgeServerConfig?
     {
-        let filemanager = FileManager()
         let decoder = JSONDecoder()
         
-        guard let jsonData = filemanager.contents(atPath: path)
+        guard let jsonData = File.get(path)
         else
         {
             print("\nUnable to get JSON data at path: \(path)\n")

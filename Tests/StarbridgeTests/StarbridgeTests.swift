@@ -8,6 +8,7 @@ import ReplicantSwift
 
 final class StarbridgeTests: XCTestCase
 {
+    //let filePath = NSString(string: "~").expandingTildeInPath
     #if (os(macOS))
     func testStarbridge()
     {
