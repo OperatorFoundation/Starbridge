@@ -20,7 +20,7 @@ final class StarbridgeTests: XCTestCase
             
             let logger = Logging.Logger(label: "Starbridge")
             let starburstServerConfig = StarburstConfig.SMTPServer
-            let starbridgeServer = Starbridge(logger: logger, config: starburstServerConfig)
+            let starbridgeServer = Starbridge(logger: logger, osLogger: nil, config: starburstServerConfig)
             
             guard let starbridgeServerConfig = StarbridgeServerConfig(serverPersistentPrivateKey: privateKeyHex, serverIP: "127.0.0.1", port: 1234) else
             {
@@ -50,7 +50,7 @@ final class StarbridgeTests: XCTestCase
             }
             
             let starburstClientConfig = StarburstConfig.SMTPClient
-            let starbridgeClient = Starbridge(logger: logger, config: starburstClientConfig)
+            let starbridgeClient = Starbridge(logger: logger, osLogger: nil, config: starburstClientConfig)
             
             guard let starbridgeClientConfig = StarbridgeClientConfig(serverPersistantPublicKey: publicKeyHex, serverIP: "127.0.0.1", port: 1234) else
             {

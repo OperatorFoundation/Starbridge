@@ -7,6 +7,7 @@
 
 import Crypto
 import Foundation
+import os.log
 import Logging
 
 import Gardener
@@ -18,16 +19,16 @@ import Universe
 
 public class Starbridge
 {
-    var logger: Logger
+    var logger: Logging.Logger
     let simulation: Simulation
     let universe: StarbridgeUniverse
 
-    public init(logger: Logger, config: StarburstConfig)
+    public init(logger: Logging.Logger, osLogger: os.Logger?, config: StarburstConfig)
     {
         self.logger = logger
         let sim = Simulation(capabilities: Capabilities(.display, .random, .networkConnect, .networkListen))
         self.simulation = sim
-        self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events)
+        self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events, logger: osLogger)
     }
 
     public func listen(config: StarbridgeServerConfig) throws -> TransmissionTypes.Listener
