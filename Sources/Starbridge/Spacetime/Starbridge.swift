@@ -61,17 +61,17 @@ public class Starbridge
     ///     - serverIP: String The IP address of the Starbridge server
     ///     - serverPort: UInt16 The port the Starbridge server will listen on
     /// - Returns: A StarbridgeServerConfig and a StarbridgeClientConfig if the operation was successful, otherwise nil.
-    public static func generateNewConfigPair(serverIP: String, serverPort: UInt16) -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)?
+    public static func generateNewConfigPair(serverAddress: String) -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)?
     {
         let keys = generateKeys()
         
-        guard let serverConfig = StarbridgeServerConfig(serverPersistentPrivateKey: keys.privateKey, serverIP: serverIP, port: serverPort) else
+        guard let serverConfig = StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: keys.privateKey) else
         {
             print("Failed to create a StarbridgeServerConfig")
             return nil
         }
         
-        guard let clientConfig = StarbridgeClientConfig(serverPersistantPublicKey: keys.publicKey, serverIP: serverIP, port: serverPort) else
+        guard let clientConfig = StarbridgeClientConfig(serverAddress: serverAddress, serverPublicKey: keys.publicKey) else
         {
             print("Failed to create a StarbridgeClientConfig")
             return nil
@@ -86,7 +86,7 @@ public class Starbridge
     ///     - serverIP: String The IP address of the Starbridge server
     ///     - serverPort: UInt16 The port the Starbridge server will listen on
     /// - Returns: true if the operation was successful, otherwise false.
-    public static func createNewConfigFiles(inDirectory saveDirectory: URL, serverIP: String, serverPort: UInt16)  -> Bool
+    public static func createNewConfigFiles(inDirectory saveDirectory: URL, serverAddress: String)  -> Bool
     {
         guard saveDirectory.isDirectory else
         {
@@ -94,7 +94,7 @@ public class Starbridge
             return false
         }
         
-        guard let newConfigs = generateNewConfigPair(serverIP: serverIP, serverPort: serverPort) else
+        guard let newConfigs = generateNewConfigPair(serverAddress: serverAddress) else
         {
             return false
         }

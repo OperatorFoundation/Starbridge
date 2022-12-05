@@ -6,22 +6,14 @@ import ShadowSwift
 
 public struct StarbridgeServerConfig: Codable
 {
-    public var replicantConfig: ReplicantServerConfig
-    public var serverIP: String
-    public var port: UInt16
+    public var serverAddress: String
+    public var serverPrivateKey: String
+    public var transport = "starbridge"
     
-    public init?(serverPersistentPrivateKey: String, serverIP: String, port: UInt16)
+    public init?(serverAddress: String, serverPrivateKey: String)
     {
-        let shadowConfig = ShadowConfig(key: serverPersistentPrivateKey, serverIP: serverIP, port: port, mode: .DARKSTAR)
-        let polish = PolishServerConfig.darkStar(shadowConfig)
-        let starburstConfig = StarburstConfig.SMTPServer
-        let toneburst = ToneBurstServerConfig.starburst(config: starburstConfig)
-        guard let replicantConfig = ReplicantServerConfig(polish: polish, toneBurst: toneburst) else {
-            return nil
-        }
-        self.replicantConfig = replicantConfig
-        self.serverIP = serverIP
-        self.port = port
+        self.serverAddress = serverAddress
+        self.serverPrivateKey = serverPrivateKey
     }
     
     public init?(withConfigAtPath path: String)

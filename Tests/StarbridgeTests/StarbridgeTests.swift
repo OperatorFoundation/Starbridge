@@ -1,6 +1,7 @@
 import XCTest
 
 import Crypto
+import os.log
 import Logging
 import ReplicantSwift
 
@@ -16,13 +17,13 @@ final class StarbridgeTests: XCTestCase
         {
             let serverSendData = "success".data
             let clientSendData = "pass".data
-            let (privateKeyHex, publicKeyHex) = generateKeys()
+            let (privateKeyString, publicKeyString) = generateKeys()
             
             let logger = Logging.Logger(label: "Starbridge")
-            let starburstServerConfig = StarburstConfig.SMTPServer
+            let starburstServerConfig = StarburstConfig(mode: .SMTPServer)
             let starbridgeServer = Starbridge(logger: logger, osLogger: nil, config: starburstServerConfig)
             
-            guard let starbridgeServerConfig = StarbridgeServerConfig(serverPersistentPrivateKey: privateKeyHex, serverIP: "127.0.0.1", port: 1234) else
+            guard let starbridgeServerConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: privateKeyString) else
             {
                 XCTFail()
                 return
@@ -49,10 +50,10 @@ final class StarbridgeTests: XCTestCase
                 XCTAssertEqual(serverReadData.string, clientSendData.string)
             }
             
-            let starburstClientConfig = StarburstConfig.SMTPClient
+            let starburstClientConfig = StarburstConfig(mode: .SMTPClient)
             let starbridgeClient = Starbridge(logger: logger, osLogger: nil, config: starburstClientConfig)
             
-            guard let starbridgeClientConfig = StarbridgeClientConfig(serverPersistantPublicKey: publicKeyHex, serverIP: "127.0.0.1", port: 1234) else
+            guard let starbridgeClientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: publicKeyString) else
             {
                 XCTFail()
                 return
@@ -85,7 +86,7 @@ final class StarbridgeTests: XCTestCase
         // TODO: Add directory for iOS
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
         
-        XCTAssert(Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverIP: "127.0.0.1", serverPort: 1234))
+        XCTAssert(Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverAddress: "127.0.0.1:1234"))
         
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
@@ -124,12 +125,12 @@ final class StarbridgeTests: XCTestCase
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
         
-        guard let serverConfig = StarbridgeServerConfig(serverPersistentPrivateKey: keys.privateKey, serverIP: "127.0.0.1", port: 1234) else {
+        guard let serverConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: keys.privateKey) else {
             XCTFail()
             return
         }
         
-        guard let clientConfig = StarbridgeClientConfig(serverPersistantPublicKey: keys.publicKey, serverIP: "127.0.0.1", port: 1234) else {
+        guard let clientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: keys.publicKey) else {
             XCTFail()
             return
         }
@@ -180,15 +181,15 @@ final class StarbridgeTests: XCTestCase
     {
         let privateKey = P256.KeyAgreement.PrivateKey()
         let privateKeyData = privateKey.rawRepresentation
-        let privateKeyHex = privateKeyData.hex
+        let privateKeyString = privateKeyData.base64EncodedString()
 
         let publicKey = privateKey.publicKey
         let publicKeyData = publicKey.compactRepresentation
-        let publicKeyHex = publicKeyData!.hex
+        let publicKeyString = publicKeyData!.base64EncodedString()
 
-        print("Private key: \(privateKeyHex)")
-        print("Public key: \(publicKeyHex)")
+        print("Private key: \(privateKeyString)")
+        print("Public key: \(publicKeyString)")
         
-        return(privateKeyHex, publicKeyHex)
+        return(privateKeyString, publicKeyString)
     }
 }

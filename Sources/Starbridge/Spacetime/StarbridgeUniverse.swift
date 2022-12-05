@@ -18,19 +18,33 @@ public class StarbridgeUniverse: Universe
 {
     public func starbridgeListen(config: StarbridgeServerConfig, logger: Logger) throws -> UniverseListener
     {
-        return try ReplicantUniverseListener(universe: self, address: config.serverIP, port: Int(config.port), config: config.replicantConfig, logger: logger)
+        var addressArray = config.serverAddress.split(separator: ":")
+        let host = String(addressArray[0])
+        let port = Int(addressArray[1])
+        let starburstServer = StarburstConfig(mode: StarburstMode.SMTPServer)
+        let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
+        let toneburstServerConfig = ToneBurstServerConfig.starburst(config: starburstServer)
+        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: toneburstServerConfig, transport: "replicant")
+        return try ReplicantUniverseListener(universe: self, address: host, port: port!, config: replicantConfig, logger: logger)
     }
 
     public func starbridgeConnect(config: StarbridgeClientConfig, _ logger: Logger) throws -> TransmissionTypes.Connection
     {
-        let network = try super.connect(config.replicantConfig.serverIP, Int(config.replicantConfig.port))
+        var addressArray = config.serverAddress.split(separator: ":")
+        let host = String(addressArray[0])
+        let port = Int(addressArray[1])
+        let starburstClient = StarburstConfig(mode: StarburstMode.SMTPClient)
+        let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
+        let toneburstClientConfig = ToneBurstClientConfig.starburst(config: starburstClient)
+        let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: toneburstClientConfig, transport: "replicant")
+        let network = try super.connect(host, port!)
 
         guard let connection = network as? ConnectConnection else
         {
             throw StarbridgeUniverseError.wrongConnectionType
         }
 
-        return try connection.replicantClientTransformation(config.replicantConfig, logger)
+        return try connection.replicantClientTransformation(replicantConfig, logger)
     }
 }
 

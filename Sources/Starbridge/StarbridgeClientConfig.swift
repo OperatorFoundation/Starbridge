@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Datable
 import Gardener
 import ReplicantSwift
 import ShadowSwift
@@ -14,16 +15,14 @@ import Song
 
 public struct StarbridgeClientConfig: Codable
 {
-    public let replicantConfig: ReplicantClientConfig
+    public var serverAddress: String
+    public var serverPublicKey: String
+    public var transport = "starbridge"
     
-    public init?(serverPersistantPublicKey: String, serverIP: String, port: UInt16)
+    public init?(serverAddress: String, serverPublicKey: String)
     {
-        let shadowConfig = ShadowConfig(key: serverPersistantPublicKey, serverIP: serverIP, port: port, mode: .DARKSTAR)
-        let polish = PolishClientConfig.darkStar(shadowConfig)
-        let starburstConfig = StarburstConfig.SMTPClient
-        let toneburst = ToneBurstClientConfig.starburst(config: starburstConfig)
-        let replicantConfig = ReplicantClientConfig(serverIP: serverIP, port: port, polish: polish, toneBurst: toneburst)
-        self.replicantConfig = replicantConfig
+        self.serverAddress = serverAddress
+        self.serverPublicKey = serverPublicKey
     }
     
     /// Initializes StarbridgeClientConfig with the JSON file located at path. Returns nil if the file is not a valid JSON Starbridge config, or if the file does not exist.
