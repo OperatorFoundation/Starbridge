@@ -24,7 +24,7 @@ public class StarbridgeUniverse: Universe
         let starburstServer = StarburstConfig(mode: StarburstMode.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
         let toneburstServerConfig = ToneBurstServerConfig.starburst(config: starburstServer)
-        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: toneburstServerConfig, transport: "replicant")
+        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: toneburstServerConfig, transport: "Replicant")
         return try ReplicantUniverseListener(universe: self, address: host, port: port!, config: replicantConfig, logger: logger)
     }
 
@@ -36,7 +36,7 @@ public class StarbridgeUniverse: Universe
         let starburstClient = StarburstConfig(mode: StarburstMode.SMTPClient)
         let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
         let toneburstClientConfig = ToneBurstClientConfig.starburst(config: starburstClient)
-        let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: toneburstClientConfig, transport: "replicant")
+        let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: toneburstClientConfig, transport: "Replicant")
         let network = try super.connect(host, port!)
 
         guard let connection = network as? ConnectConnection else

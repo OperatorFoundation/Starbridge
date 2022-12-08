@@ -8,7 +8,7 @@ public struct StarbridgeServerConfig: Codable
 {
     public var serverAddress: String
     public var serverPrivateKey: String
-    public var transport = "starbridge"
+    public var transport = "Starbridge"
     
     public init?(serverAddress: String, serverPrivateKey: String)
     {
