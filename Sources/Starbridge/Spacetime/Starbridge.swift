@@ -47,11 +47,11 @@ public class Starbridge
     {
         let privateKey = P256.KeyAgreement.PrivateKey()
         let privateKeyData = privateKey.rawRepresentation
-        let privateKeyHex = privateKeyData.hex
+        let privateKeyHex = privateKeyData.base64EncodedString()
 
         let publicKey = privateKey.publicKey
         let publicKeyData = publicKey.compactRepresentation
-        let publicKeyHex = publicKeyData!.hex
+        let publicKeyHex = publicKeyData!.base64EncodedString()
         
         return(privateKeyHex, publicKeyHex)
     }
