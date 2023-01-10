@@ -1,16 +1,17 @@
 import Foundation
 
 import Gardener
+import KeychainTypes
 import ReplicantSwift
 import ShadowSwift
 
 public struct StarbridgeServerConfig: Codable
 {
     public var serverAddress: String
-    public var serverPrivateKey: String
+    public var serverPrivateKey: PrivateKey
     public var transport = "Starbridge"
     
-    public init?(serverAddress: String, serverPrivateKey: String)
+    public init?(serverAddress: String, serverPrivateKey: PrivateKey)
     {
         self.serverAddress = serverAddress
         self.serverPrivateKey = serverPrivateKey

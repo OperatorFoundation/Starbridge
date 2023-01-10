@@ -1,6 +1,7 @@
 import XCTest
 
 import Crypto
+import KeychainTypes
 import os.log
 import Logging
 import ReplicantSwift
@@ -17,7 +18,7 @@ final class StarbridgeTests: XCTestCase
         {
             let serverSendData = "success".data
             let clientSendData = "pass".data
-            let (privateKeyString, publicKeyString) = generateKeys()
+            let (privateKeyString, publicKeyString) = try generateKeys()
             
             let logger = Logging.Logger(label: "Starbridge")
             let starburstServerConfig = StarburstConfig(mode: .SMTPServer)
@@ -120,7 +121,7 @@ final class StarbridgeTests: XCTestCase
             }
         }
         
-        let keys = generateKeys()
+        let keys = try generateKeys()
         
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
@@ -177,19 +178,10 @@ final class StarbridgeTests: XCTestCase
     }
     #endif
     
-    func generateKeys() -> (privateKey: String, publicKey: String)
+    func generateKeys() throws -> (privateKey: PrivateKey, publicKey: PublicKey)
     {
-        let privateKey = P256.KeyAgreement.PrivateKey()
-        let privateKeyData = privateKey.rawRepresentation
-        let privateKeyString = privateKeyData.base64EncodedString()
-
-        let publicKey = privateKey.publicKey
-        let publicKeyData = publicKey.compactRepresentation
-        let publicKeyString = publicKeyData!.base64EncodedString()
-
-        print("Private key: \(privateKeyString)")
-        print("Public key: \(publicKeyString)")
+        let privateKey = try PrivateKey(type: .P256KeyAgreement)
         
-        return(privateKeyString, publicKeyString)
+        return(privateKey, privateKey.publicKey)
     }
 }

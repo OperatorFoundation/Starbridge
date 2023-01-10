@@ -9,6 +9,7 @@ import Foundation
 
 import Datable
 import Gardener
+import KeychainTypes
 import ReplicantSwift
 import ShadowSwift
 import Song
@@ -16,10 +17,10 @@ import Song
 public struct StarbridgeClientConfig: Codable
 {
     public var serverAddress: String
-    public var serverPublicKey: String
+    public var serverPublicKey: PublicKey
     public var transport = "Starbridge"
     
-    public init?(serverAddress: String, serverPublicKey: String)
+    public init?(serverAddress: String, serverPublicKey: PublicKey)
     {
         self.serverAddress = serverAddress
         self.serverPublicKey = serverPublicKey

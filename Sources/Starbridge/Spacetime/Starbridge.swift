@@ -11,6 +11,7 @@ import os.log
 import Logging
 
 import Gardener
+import KeychainTypes
 import ReplicantSwift
 import Simulation
 import Spacetime
@@ -43,17 +44,11 @@ public class Starbridge
     
     /// Creates  a randomly generated P-256 and returns the hex format of their respective raw (data) representations. This is a format suitable for JSON config files.
     /// - Returns: A private key and its corresponding public key as hex strings.
-    public static func generateKeys() -> (privateKey: String, publicKey: String)
+    public static func generateKeys() throws -> (privateKey: PrivateKey, publicKey: PublicKey)
     {
-        let privateKey = P256.KeyAgreement.PrivateKey()
-        let privateKeyData = privateKey.rawRepresentation
-        let privateKeyHex = privateKeyData.base64EncodedString()
-
-        let publicKey = privateKey.publicKey
-        let publicKeyData = publicKey.compactRepresentation
-        let publicKeyHex = publicKeyData!.base64EncodedString()
+        let privateKey = try PrivateKey(type: .P256KeyAgreement)
         
-        return(privateKeyHex, publicKeyHex)
+        return(privateKey, privateKey.publicKey)
     }
     
     /// Creates and returns a Starbridge config file pair with a randomly generated key pair and the specified server attributes.
@@ -63,7 +58,10 @@ public class Starbridge
     /// - Returns: A StarbridgeServerConfig and a StarbridgeClientConfig if the operation was successful, otherwise nil.
     public static func generateNewConfigPair(serverAddress: String) -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)?
     {
-        let keys = generateKeys()
+        guard let keys = try? generateKeys() else
+        {
+            return nil
+        }
         
         guard let serverConfig = StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: keys.privateKey) else
         {
