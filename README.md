@@ -176,4 +176,4 @@ To generate and save a server and client config pair to a given directory in cod
 Alternatively you can use the ShapeshifterConfigs command line tool that is included in [ShapeshifterDispatcherSwift](https://github.com/OperatorFoundation/ShapeshifterDispatcherSwift.git).
 
 ### Credits
-* Shadowsocks was developed by the Shadowsocks team. [whitepaper](https://shadowsocks.org/assets/whitepaper.pdf)
+* [Shadowsocks](https://shadowsocks.org/) was developed by the Shadowsocks team.
