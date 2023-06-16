@@ -2,8 +2,11 @@ import XCTest
 
 import Crypto
 import KeychainTypes
+#if os(macOS)
 import os.log
+#else
 import Logging
+#endif
 import ReplicantSwift
 
 @testable import Starbridge
@@ -19,10 +22,14 @@ final class StarbridgeTests: XCTestCase
             let serverSendData = "success".data
             let clientSendData = "pass".data
             let (privateKeyString, publicKeyString) = try generateKeys()
-            
-            let logger = Logging.Logger(label: "Starbridge")
+
+            #if os(macOS)
+            let logger = Logger(subsystem: "Starbridge", category: "Tests")
+            #else
+            let logger = Logger(label: "Starbridge")
+            #endif
             let starburstServerConfig = StarburstConfig(mode: .SMTPServer)
-            let starbridgeServer = Starbridge(logger: logger, osLogger: nil, config: starburstServerConfig)
+            let starbridgeServer = Starbridge(logger: logger, config: starburstServerConfig)
             
             guard let starbridgeServerConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: privateKeyString) else
             {
@@ -52,7 +59,7 @@ final class StarbridgeTests: XCTestCase
             }
             
             let starburstClientConfig = StarburstConfig(mode: .SMTPClient)
-            let starbridgeClient = Starbridge(logger: logger, osLogger: nil, config: starburstClientConfig)
+            let starbridgeClient = Starbridge(logger: logger, config: starburstClientConfig)
             
             guard let starbridgeClientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: publicKeyString) else
             {

@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if os(macOS)
+import os.log
+#else
 import Logging
+#endif
 
 import Datable
 import ReplicantSwift
@@ -18,7 +22,7 @@ public class StarbridgeUniverse: Universe
 {
     public func starbridgeListen(config: StarbridgeServerConfig, logger: Logger) throws -> UniverseListener
     {
-        var addressArray = config.serverAddress.split(separator: ":")
+        let addressArray = config.serverAddress.split(separator: ":")
         let host = String(addressArray[0])
         let port = Int(addressArray[1])
         let starburstServer = StarburstConfig(mode: StarburstMode.SMTPServer)
@@ -30,7 +34,7 @@ public class StarbridgeUniverse: Universe
 
     public func starbridgeConnect(config: StarbridgeClientConfig, _ logger: Logger) throws -> TransmissionTypes.Connection
     {
-        var addressArray = config.serverAddress.split(separator: ":")
+        let addressArray = config.serverAddress.split(separator: ":")
         let host = String(addressArray[0])
         let port = Int(addressArray[1])
         let starburstClient = StarburstConfig(mode: StarburstMode.SMTPClient)
