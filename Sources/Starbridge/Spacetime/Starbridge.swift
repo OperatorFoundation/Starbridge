@@ -27,7 +27,7 @@ public class Starbridge
     let simulation: Simulation
     let universe: StarbridgeUniverse
 
-    public init(logger: Logger, config: StarburstConfig)
+    public init(logger: Logger)
     {
         self.logger = logger
         let sim = Simulation(capabilities: Capabilities(.display, .random, .networkConnect, .networkListen))

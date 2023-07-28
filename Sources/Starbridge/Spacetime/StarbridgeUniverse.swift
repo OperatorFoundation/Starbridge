@@ -25,10 +25,9 @@ public class StarbridgeUniverse: Universe
         let addressArray = config.serverAddress.split(separator: ":")
         let host = String(addressArray[0])
         let port = Int(addressArray[1])
-        let starburstServer = StarburstConfig(mode: StarburstMode.SMTPServer)
+        let starburstServer = Starburst(.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
-        let toneburstServerConfig = ToneBurstServerConfig.starburst(config: starburstServer)
-        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: toneburstServerConfig, transport: "Replicant")
+        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: starburstServer, transport: "Replicant")
         return try ReplicantUniverseListener(universe: self, address: host, port: port!, config: replicantConfig, logger: logger)
     }
 
@@ -37,10 +36,11 @@ public class StarbridgeUniverse: Universe
         let addressArray = config.serverAddress.split(separator: ":")
         let host = String(addressArray[0])
         let port = Int(addressArray[1])
-        let starburstClient = StarburstConfig(mode: StarburstMode.SMTPClient)
+        let starburstClient = Starburst(.SMTPClient)
         let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
-        let toneburstClientConfig = ToneBurstClientConfig.starburst(config: starburstClient)
-        let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: toneburstClientConfig, transport: "Replicant")
+        guard let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: starburstClient, transport: "Replicant") else {
+            throw StarbridgeUniverseError.badConfig
+        }
         let network = try super.connect(host, port!)
 
         guard let connection = network as? ConnectConnection else
@@ -55,4 +55,5 @@ public class StarbridgeUniverse: Universe
 public enum StarbridgeUniverseError: Error
 {
     case wrongConnectionType
+    case badConfig
 }

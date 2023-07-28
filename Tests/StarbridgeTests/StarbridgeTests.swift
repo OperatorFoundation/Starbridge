@@ -28,8 +28,7 @@ final class StarbridgeTests: XCTestCase
             #else
             let logger = Logger(label: "Starbridge")
             #endif
-            let starburstServerConfig = StarburstConfig(mode: .SMTPServer)
-            let starbridgeServer = Starbridge(logger: logger, config: starburstServerConfig)
+            let starbridgeServer = Starbridge(logger: logger)
             
             guard let starbridgeServerConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: privateKeyString) else
             {
@@ -58,8 +57,7 @@ final class StarbridgeTests: XCTestCase
                 XCTAssertEqual(serverReadData.string, clientSendData.string)
             }
             
-            let starburstClientConfig = StarburstConfig(mode: .SMTPClient)
-            let starbridgeClient = Starbridge(logger: logger, config: starburstClientConfig)
+            let starbridgeClient = Starbridge(logger: logger)
             
             guard let starbridgeClientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: publicKeyString) else
             {
