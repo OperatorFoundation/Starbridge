@@ -8,12 +8,24 @@ import ShadowSwift
 public struct StarbridgeServerConfig: Codable
 {
     public var serverAddress: String
+    public let serverIP: String
+    public let serverPort: UInt16
     public var serverPrivateKey: PrivateKey
     public var transport = "Starbridge"
     
-    public init?(serverAddress: String, serverPrivateKey: PrivateKey)
+    public init(serverAddress: String, serverPrivateKey: PrivateKey) throws
     {
         self.serverAddress = serverAddress
+        
+        let addressStrings = serverAddress.split(separator: ":")
+        self.serverIP = String(addressStrings[0])
+        guard let port = UInt16(addressStrings[1]) else
+        {
+            print("Error decoding StarbridgeServerConfig data: Invalid server port \(addressStrings[1])")
+            throw StarbridgeUniverseError.invalidServerPort(serverAddress: serverAddress)
+        }
+        
+        self.serverPort = port
         self.serverPrivateKey = serverPrivateKey
     }
     

@@ -56,4 +56,18 @@ public enum StarbridgeUniverseError: Error
 {
     case wrongConnectionType
     case badConfig
+    case invalidServerPort(serverAddress: String)
+    
+    public var description: String
+    {
+        switch self
+        {
+        case .wrongConnectionType:
+            return "Wrong connection type."
+        case .badConfig:
+            return "Invalid config."
+        case .invalidServerPort(let serverAddress):
+            return "Error decoding Starbride config data: Invalid server port from address: \(serverAddress)"
+        }
+    }
 }

@@ -59,24 +59,11 @@ public class Starbridge
     ///     - serverIP: String The IP address of the Starbridge server
     ///     - serverPort: UInt16 The port the Starbridge server will listen on
     /// - Returns: A StarbridgeServerConfig and a StarbridgeClientConfig if the operation was successful, otherwise nil.
-    public static func generateNewConfigPair(serverAddress: String) -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)?
+    public static func generateNewConfigPair(serverAddress: String) throws -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)
     {
-        guard let keys = try? generateKeys() else
-        {
-            return nil
-        }
-        
-        guard let serverConfig = StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: keys.privateKey) else
-        {
-            print("Failed to create a StarbridgeServerConfig")
-            return nil
-        }
-        
-        guard let clientConfig = StarbridgeClientConfig(serverAddress: serverAddress, serverPublicKey: keys.publicKey) else
-        {
-            print("Failed to create a StarbridgeClientConfig")
-            return nil
-        }
+        let keys = try generateKeys()
+        let serverConfig = try StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: keys.privateKey)
+        let clientConfig = try StarbridgeClientConfig(serverAddress: serverAddress, serverPublicKey: keys.publicKey)
         
         return (serverConfig, clientConfig)
     }
@@ -87,7 +74,7 @@ public class Starbridge
     ///     - serverIP: String The IP address of the Starbridge server
     ///     - serverPort: UInt16 The port the Starbridge server will listen on
     /// - Returns: true if the operation was successful, otherwise false.
-    public static func createNewConfigFiles(inDirectory saveDirectory: URL, serverAddress: String)  -> Bool
+    public static func createNewConfigFiles(inDirectory saveDirectory: URL, serverAddress: String) throws -> Bool
     {
         guard saveDirectory.isDirectory else
         {
@@ -95,15 +82,11 @@ public class Starbridge
             return false
         }
         
-        guard let newConfigs = generateNewConfigPair(serverAddress: serverAddress) else
-        {
-            return false
-        }
-        
-        let encoder = JSONEncoder()
-        
         do
         {
+            let newConfigs = try generateNewConfigPair(serverAddress: serverAddress)
+            let encoder = JSONEncoder()
+            
             let serverJson = try encoder.encode(newConfigs.serverConfig)
             let serverConfigFilename = "StarbridgeServerConfig.json"
             let serverConfigFilePath = saveDirectory.appendingPathComponent(serverConfigFilename).path

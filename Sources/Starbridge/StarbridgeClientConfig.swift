@@ -17,12 +17,25 @@ import Song
 public struct StarbridgeClientConfig: Codable
 {
     public var serverAddress: String
+    public let serverIP: String
+    public let serverPort: UInt16
     public var serverPublicKey: PublicKey
     public var transport = "Starbridge"
     
-    public init?(serverAddress: String, serverPublicKey: PublicKey)
+    public init(serverAddress: String, serverPublicKey: PublicKey) throws
     {
         self.serverAddress = serverAddress
+        
+        let addressStrings = serverAddress.split(separator: ":")
+        let ipAddress = String(addressStrings[0])
+        guard let port = UInt16(addressStrings[1]) else
+        {
+            print("Error decoding StarbridgeClientConfig data: Invalid server port.")
+            throw StarbridgeUniverseError.invalidServerPort(serverAddress: serverAddress)
+        }
+        
+        self.serverIP = ipAddress
+        self.serverPort = port
         self.serverPublicKey = serverPublicKey
     }
     

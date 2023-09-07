@@ -30,11 +30,7 @@ final class StarbridgeTests: XCTestCase
             #endif
             let starbridgeServer = Starbridge(logger: logger)
             
-            guard let starbridgeServerConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: privateKeyString) else
-            {
-                XCTFail()
-                return
-            }
+            let starbridgeServerConfig = try StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: privateKeyString)
             
             let starbridgeListener = try starbridgeServer.listen(config: starbridgeServerConfig)
             
@@ -59,11 +55,7 @@ final class StarbridgeTests: XCTestCase
             
             let starbridgeClient = Starbridge(logger: logger)
             
-            guard let starbridgeClientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: publicKeyString) else
-            {
-                XCTFail()
-                return
-            }
+            let starbridgeClientConfig = try StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: publicKeyString)
             
             let starbridgeClientConnection = try starbridgeClient.connect(config: starbridgeClientConfig)
             
@@ -92,7 +84,7 @@ final class StarbridgeTests: XCTestCase
         // TODO: Add directory for iOS
         let configDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Configs", isDirectory: true)
         
-        XCTAssert(Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverAddress: "127.0.0.1:1234"))
+        XCTAssert(try Starbridge.createNewConfigFiles(inDirectory: configDirectory, serverAddress: "127.0.0.1:1234"))
         
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
@@ -131,15 +123,9 @@ final class StarbridgeTests: XCTestCase
         let serverConfigPath = configDirectory.appendingPathComponent("StarbridgeServerConfig.json", isDirectory: false)
         let clientConfigPath = configDirectory.appendingPathComponent("StarbridgeClientConfig.json", isDirectory: false)
         
-        guard let serverConfig = StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: keys.privateKey) else {
-            XCTFail()
-            return
-        }
+        let serverConfig = try StarbridgeServerConfig(serverAddress: "127.0.0.1:1234", serverPrivateKey: keys.privateKey)
         
-        guard let clientConfig = StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: keys.publicKey) else {
-            XCTFail()
-            return
-        }
+        let clientConfig = try StarbridgeClientConfig(serverAddress: "127.0.0.1:1234", serverPublicKey: keys.publicKey)
         
         guard let serverConfigData = serverConfig.createJSON() else {
             XCTFail()
