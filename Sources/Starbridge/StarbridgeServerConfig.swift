@@ -13,6 +13,12 @@ public struct StarbridgeServerConfig: Codable
     public var serverPrivateKey: PrivateKey
     public var transport = "Starbridge"
     
+    enum CodingKeys: CodingKey {
+        case serverAddress
+        case serverPrivateKey
+        case transport
+    }
+    
     public init(serverAddress: String, serverPrivateKey: PrivateKey) throws
     {
         self.serverAddress = serverAddress
@@ -31,19 +37,60 @@ public struct StarbridgeServerConfig: Codable
     
     public init?(withConfigAtPath path: String)
     {
-        guard let config = StarbridgeServerConfig.parseJSON(atPath: path)
-        else
+        let url = URL(fileURLWithPath: path)
+        
+        do
         {
+            let data = try Data(contentsOf: url)
+            self.init(from: data)
+        }
+        catch
+        {
+            print("Error decoding a Starbridge Server config file: \(error)")
+            
             return nil
         }
+    }
+    
+    public init?(from data: Data)
+    {
+        let decoder = JSONDecoder()
+        do
+        {
+            let decoded = try decoder.decode(StarbridgeServerConfig.self, from: data)
+            
+            self = decoded
+        }
+        catch
+        {
+            print("Error received while attempting to decode a Starbridge Server config json file: \(error)")
+            return nil
+        }
+    }
+    
+    public init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let address = try container.decode(String.self, forKey: .serverAddress)
+        let addressStrings = address.split(separator: ":")
+        let ipAddress = String(addressStrings[0])
+        guard let port = UInt16(addressStrings[1]) else
+        {
+            print("Error decoding StarbridgeServerConfig data: invalid server port")
+            throw StarbridgeUniverseError.invalidServerPort(serverAddress: address)
+        }
         
-        self = config
+        self.serverAddress = address
+        self.serverIP = ipAddress
+        self.serverPort = port
+        self.serverPrivateKey = try container.decode(PrivateKey.self, forKey: .serverPrivateKey)
+        self.transport = try container.decode(String.self, forKey: .transport)
     }
     
     /// Creates and returns a JSON representation of the StarbridgeServerConfig struct.
     public func createJSON() -> Data?
     {
-        let encoder = JSONEncoder()
+        let encoder = JSONEncoder()        
         encoder.outputFormatting = .prettyPrinted
         
         do
