@@ -86,7 +86,7 @@ public class Starbridge
         {
             let newConfigs = try generateNewConfigPair(serverAddress: serverAddress)
             let encoder = JSONEncoder()
-            encoder.outputFormatting = .withoutEscapingSlashes
+            encoder.outputFormatting = [.withoutEscapingSlashes, .prettyPrinted]
             
             let serverJson = try encoder.encode(newConfigs.serverConfig)
             let serverConfigFilename = "StarbridgeServerConfig.json"

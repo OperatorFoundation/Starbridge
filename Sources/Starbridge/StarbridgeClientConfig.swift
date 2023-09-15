@@ -104,7 +104,7 @@ public struct StarbridgeClientConfig: Codable
     public func createJSON() -> Data?
     {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .withoutEscapingSlashes
+        encoder.outputFormatting = [.withoutEscapingSlashes, .prettyPrinted]
         
         do
         {
