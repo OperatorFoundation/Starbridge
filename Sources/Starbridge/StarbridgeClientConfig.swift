@@ -76,6 +76,7 @@ public struct StarbridgeClientConfig: Codable
         }
         catch
         {
+            print("StarbridgeClientConfig: \(StarbridgeClientConfig.self)")
             print("Error received while attempting to decode a Starbridge Client config json file: \(error)")
             return nil
         }
