@@ -14,7 +14,7 @@ import ReplicantSwift
 import ShadowSwift
 import Song
 
-public struct StarbridgeClientConfig: Codable
+public struct StarbridgeClientConfig: Codable, Equatable
 {
     public var serverAddress: String
     public let serverIP: String
