@@ -14,7 +14,7 @@ import ReplicantSwift
 import ShadowSwift
 import Song
 
-public struct StarbridgeClientConfig: Codable
+public struct StarbridgeClientConfig: Codable, Equatable
 {
     public var serverAddress: String
     public let serverIP: String
@@ -76,6 +76,7 @@ public struct StarbridgeClientConfig: Codable
         }
         catch
         {
+            print("StarbridgeClientConfig: \(Starbridge.self)")
             print("Error received while attempting to decode a Starbridge Client config json file: \(error)")
             return nil
         }

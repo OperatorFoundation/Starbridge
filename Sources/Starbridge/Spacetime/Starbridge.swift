@@ -7,11 +7,7 @@
 
 import Crypto
 import Foundation
-#if os(macOS)
-import os.log
-#else
 import Logging
-#endif
 
 import Gardener
 import KeychainTypes
@@ -32,7 +28,9 @@ public class Starbridge
         self.logger = logger
         let sim = Simulation(capabilities: Capabilities(.display, .random, .networkConnect, .networkListen))
         self.simulation = sim
-        self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events, logger: logger)
+        
+        // FIXME: Logger
+        self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events, logger: nil)
     }
 
     public func listen(config: StarbridgeServerConfig) throws -> TransmissionTypes.Listener
