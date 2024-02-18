@@ -15,8 +15,8 @@ let package = Package(
             targets: ["Starbridge"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", branch: "release"),
-        .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "release")
+        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", from: "2.0.1"),
+        .package(url: "https://github.com/OperatorFoundation/Gardener", from: "0.1.1")
     ],
     targets: [
         .target(
