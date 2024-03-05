@@ -22,7 +22,7 @@ transport provides a different approach to shapeshifting.
 
 ### Shapeshifter Transports
 
-Shapeshifter Transports is a suite of pluggable transports implemented in a variety of langauges. This repository 
+Shapeshifter Transports is a suite of pluggable transports implemented in a variety of languages. This repository 
 is an implementation of the **Starbridge** transport in the Swift programming language. 
 
 The purpose of the transport suite is to provide a variety of different transports to choose from. Each transport implements a different method of shapeshifting network traffic. The goal is for application traffic to be sent over the network in a shapeshifted form that bypasses network filtering, allowing the application to work on networks where it would otherwise be blocked or heavily throttled. If one transport is blocked, trying a different transport (or transport configuration in the case of Replicant) may help. The [Optimizer](https://github.com/OperatorFoundation/Optimizer-go.git) transport is specifically designed with this in mind, it functions by rotating through different transports when a connection cannot be made.
