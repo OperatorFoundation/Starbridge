@@ -29,7 +29,7 @@ public class AsyncStarbridge
         self.logger = logger
     }
 
-    public func listen(config: StarbridgeServerConfig) async throws -> AsyncListener
+    public func listen(config: StarbridgeServerConfig) throws -> AsyncListener
     {
         let starburstServer = Starburst(.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
