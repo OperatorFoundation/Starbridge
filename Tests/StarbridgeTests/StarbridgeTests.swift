@@ -72,6 +72,42 @@ final class StarbridgeTests: XCTestCase
         }
     }
     
+    func testAsyncStarbridge() async
+    {
+        do
+        {
+            let starbridgeClientConfigPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("StarbridgeClientConfig.json")
+            
+            let clientSendData = "pass".data
+            let logger = Logger(label: "AsyncStarbridge")
+            
+            let asyncStarbridgeClient = AsyncStarbridge(logger: logger)
+            
+            guard let starbridgeClientConfig = StarbridgeClientConfig(withConfigAtPath: starbridgeClientConfigPath.path) else
+            {
+                XCTFail()
+                return
+            }
+            print("Trying to connect using: ")
+            print("ServerAddress: \(starbridgeClientConfig.serverAddress)")
+            print("TransportName: \(starbridgeClientConfig.transport)")
+            print("Server Public Key:\(starbridgeClientConfig.serverPublicKey)")
+            
+            let asyncStarbridgeClientConnection = try await asyncStarbridgeClient.connect(config: starbridgeClientConfig)
+            
+            print("AsyncStarbridgeClient connected to server.")
+            
+            try await asyncStarbridgeClientConnection.write(clientSendData)
+            
+            print("AsyncStarbridgeClient wrote to server.")
+        }
+        catch
+        {
+            XCTFail()
+        }
+
+    }
+    
     func testCreateNewConfigFiles()
     {
         // TODO: Add directory for iOS
