@@ -72,13 +72,13 @@ final class StarbridgeTests: XCTestCase
         }
     }
     
-    func testAsyncStarbridge() async
+    func testAsyncStarbridgeEcho() async
     {
         do
         {
             let starbridgeClientConfigPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("StarbridgeClientConfig.json")
             
-            let clientSendData = "pass".data
+            let clientMessage = "pass"
             let logger = Logger(label: "AsyncStarbridge")
             
             let asyncStarbridgeClient = AsyncStarbridge(logger: logger)
@@ -91,15 +91,19 @@ final class StarbridgeTests: XCTestCase
             print("Trying to connect using: ")
             print("ServerAddress: \(starbridgeClientConfig.serverAddress)")
             print("TransportName: \(starbridgeClientConfig.transport)")
-            print("Server Public Key:\(starbridgeClientConfig.serverPublicKey)")
             
             let asyncStarbridgeClientConnection = try await asyncStarbridgeClient.connect(config: starbridgeClientConfig)
             
             print("AsyncStarbridgeClient connected to server.")
             
-            try await asyncStarbridgeClientConnection.write(clientSendData)
+            try await asyncStarbridgeClientConnection.write(clientMessage.data)
             
             print("AsyncStarbridgeClient wrote to server.")
+            
+            let response = try await asyncStarbridgeClientConnection.read()
+            print("Server response: \(response.string)")
+            
+            XCTAssertEqual(clientMessage, response.string)
         }
         catch
         {
