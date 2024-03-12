@@ -31,10 +31,10 @@ public class AsyncStarbridge
 
     public func listen(config: StarbridgeServerConfig) throws -> AsyncListener
     {
-        let starburstServer = Starburst(.SMTPServer)
+        let serverToneburst = StarburstAsync(.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
-        let replicantConfig = ReplicantServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: starburstServer, transport: "Replicant")
-        return try ReplicantListenerAsync(address: config.serverIP, port: Int(config.serverPort), config: replicantConfig, logger: self.logger)
+        let replicantConfig = try ReplicantConfigAsync.ServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: serverToneburst)
+        return try ReplicantListenerAsync(config: replicantConfig, logger: self.logger)
     }
 
     public func connect(config: StarbridgeClientConfig) async throws -> AsyncConnection
