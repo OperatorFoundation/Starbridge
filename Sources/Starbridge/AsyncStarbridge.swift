@@ -39,15 +39,12 @@ public class AsyncStarbridge
 
     public func connect(config: StarbridgeClientConfig) async throws -> AsyncConnection
     {
-        let starburstClient = Starburst(.SMTPClient)
+        let clientToneburst = StarburstAsync(.SMTPClient)
         let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
-        guard let replicantConfig = ReplicantClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: starburstClient, transport: "Replicant") else {
-            throw StarbridgeError.invalidConfig
-        }
-        
+        let replicantConfig = try ReplicantConfigAsync.ClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: clientToneburst)
         let network = try await AsyncTcpSocketConnection(config.serverIP, Int(config.serverPort), logger)
 
-        return try await replicant.replicantClientTransformationAsync(connection: network, replicantConfig, self.logger)
+        return try await replicant.replicantClientTransformationAsync(connection: network, config: replicantConfig, logger: self.logger)
     }
     
     /// Creates  a randomly generated P-256 and returns the hex format of their respective raw (data) representations. This is a format suitable for JSON config files.
