@@ -37,7 +37,7 @@ public struct StarbridgeClientConfig: Codable, Equatable
         guard let port = UInt16(addressStrings[1]) else
         {
             print("Error decoding StarbridgeClientConfig data: Invalid server port.")
-            throw StarbridgeUniverseError.invalidServerPort(serverAddress: serverAddress)
+            throw StarbridgeError.invalidServerPort(serverAddress: serverAddress)
         }
         
         self.serverIP = ipAddress
@@ -76,7 +76,6 @@ public struct StarbridgeClientConfig: Codable, Equatable
         }
         catch
         {
-            print("StarbridgeClientConfig: \(Starbridge.self)")
             print("Error received while attempting to decode a Starbridge Client config json file: \(error)")
             return nil
         }
@@ -91,7 +90,7 @@ public struct StarbridgeClientConfig: Codable, Equatable
         guard let port = UInt16(addressStrings[1]) else
         {
             print("Error decoding StarbridgeServerConfig data: invalid server port")
-            throw StarbridgeUniverseError.invalidServerPort(serverAddress: address)
+            throw StarbridgeError.invalidServerPort(serverAddress: address)
         }
         
         self.serverAddress = address

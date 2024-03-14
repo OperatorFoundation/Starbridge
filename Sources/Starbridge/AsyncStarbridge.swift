@@ -20,31 +20,31 @@ import TransmissionTypes
 
 public class AsyncStarbridge
 {
-    let replicant: ReplicantAsync
+    let replicant: Replicant
     let logger: Logger
 
     public init(logger: Logger)
     {
-        self.replicant = ReplicantAsync(logger: logger)
+        self.replicant = Replicant(logger: logger)
         self.logger = logger
     }
 
     public func listen(config: StarbridgeServerConfig) throws -> AsyncListener
     {
-        let serverToneburst = StarburstAsync(.SMTPServer)
+        let serverToneburst = Starburst(.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
-        let replicantConfig = try ReplicantConfigAsync.ServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: serverToneburst)
-        return try ReplicantListenerAsync(config: replicantConfig, logger: self.logger)
+        let replicantConfig = try ReplicantConfig.ServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: serverToneburst)
+        return try ReplicantListener(config: replicantConfig, logger: self.logger)
     }
 
     public func connect(config: StarbridgeClientConfig) async throws -> AsyncConnection
     {
-        let clientToneburst = StarburstAsync(.SMTPClient)
+        let clientToneburst = Starburst(.SMTPClient)
         let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
-        let replicantConfig = try ReplicantConfigAsync.ClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: clientToneburst)
+        let replicantConfig = try ReplicantConfig.ClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: clientToneburst)
         let network = try await AsyncTcpSocketConnection(config.serverIP, Int(config.serverPort), logger)
 
-        return try await replicant.replicantClientTransformationAsync(connection: network, config: replicantConfig, logger: self.logger)
+        return try await replicant.replicantClientTransformation(connection: network, config: replicantConfig, logger: self.logger)
     }
     
     /// Creates  a randomly generated P-256 and returns the hex format of their respective raw (data) representations. This is a format suitable for JSON config files.

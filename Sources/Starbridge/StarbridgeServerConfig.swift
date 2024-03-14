@@ -28,7 +28,7 @@ public struct StarbridgeServerConfig: Codable
         guard let port = UInt16(addressStrings[1]) else
         {
             print("Error decoding StarbridgeServerConfig data: Invalid server port \(addressStrings[1])")
-            throw StarbridgeUniverseError.invalidServerPort(serverAddress: serverAddress)
+            throw StarbridgeError.invalidServerPort(serverAddress: serverAddress)
         }
         
         self.serverPort = port
@@ -77,7 +77,7 @@ public struct StarbridgeServerConfig: Codable
         guard let port = UInt16(addressStrings[1]) else
         {
             print("Error decoding StarbridgeServerConfig data: invalid server port")
-            throw StarbridgeUniverseError.invalidServerPort(serverAddress: address)
+            throw StarbridgeError.invalidServerPort(serverAddress: address)
         }
         
         self.serverAddress = address
