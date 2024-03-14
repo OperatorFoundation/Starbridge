@@ -19,7 +19,7 @@ final class StarbridgeTests: XCTestCase
         let clientMessage = "pass"
         let logger = Logger(label: "AsyncStarbridge")
         
-        let asyncStarbridgeClient = AsyncStarbridge(logger: logger)
+        let asyncStarbridgeClient = Starbridge(logger: logger)
         
         guard let starbridgeClientConfig = StarbridgeClientConfig(withConfigAtPath: starbridgeClientConfigPath.path) else
         {

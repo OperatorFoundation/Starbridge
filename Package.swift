@@ -18,14 +18,18 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log", from: "1.5.4"),
         
         .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/KeychainTypes", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/TransmissionAsync", branch: "main"),
     ],
     targets: [
         .target(
             name: "Starbridge",
             dependencies: [
-            "ReplicantSwift",
             "Gardener",
+            "KeychainTypes",
+            "ReplicantSwift",
+            "TransmissionAsync",
             .product(name: "Logging", package: "swift-log"),
             ]),
         .testTarget(

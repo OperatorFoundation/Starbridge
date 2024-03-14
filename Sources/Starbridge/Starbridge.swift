@@ -16,9 +16,8 @@ import Gardener
 import KeychainTypes
 import ReplicantSwift
 import TransmissionAsync
-import TransmissionTypes
 
-public class AsyncStarbridge
+public class Starbridge
 {
     let replicant: Replicant
     let logger: Logger
