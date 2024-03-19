@@ -19,12 +19,10 @@ import TransmissionAsync
 
 public class Starbridge
 {
-    let replicant: Replicant
     let logger: Logger
 
     public init(logger: Logger)
     {
-        self.replicant = Replicant(logger: logger)
         self.logger = logger
     }
 
@@ -32,18 +30,18 @@ public class Starbridge
     {
         let serverToneburst = Starburst(.SMTPServer)
         let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
-        let replicantConfig = try ReplicantConfig.ServerConfig(serverAddress: config.serverAddress, polish: polishServerConfig, toneBurst: serverToneburst)
-        return try ReplicantListener(config: replicantConfig, logger: self.logger)
+        let replicant = Replicant(logger: self.logger, polish: polishServerConfig, toneburst: serverToneburst)
+        return try ReplicantListener(replicant: replicant, serverIP: config.serverIP, serverPort: Int(config.serverPort), logger: self.logger)
     }
 
     public func connect(config: StarbridgeClientConfig) async throws -> AsyncConnection
     {
         let clientToneburst = Starburst(.SMTPClient)
         let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
-        let replicantConfig = try ReplicantConfig.ClientConfig(serverAddress: config.serverAddress, polish: polishClientConfig, toneBurst: clientToneburst)
+        let replicant = Replicant(logger: self.logger, polish: polishClientConfig, toneburst: clientToneburst)
         let network = try await AsyncTcpSocketConnection(config.serverIP, Int(config.serverPort), logger)
 
-        return try await replicant.replicantClientTransformation(connection: network, config: replicantConfig, logger: self.logger)
+        return try await replicant.replicantClientTransformation(connection: network)
     }
     
     /// Creates  a randomly generated P-256 and returns the hex format of their respective raw (data) representations. This is a format suitable for JSON config files.
