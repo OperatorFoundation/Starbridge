@@ -59,6 +59,45 @@ public class StarbridgeConfig: Codable
         try container.encode(self.serverAddress, forKey: .serverAddress)
         try container.encode(self.transportName, forKey: .transportName)
     }
+    
+    static public func generateNewConfigPair(serverAddress: String) throws -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)
+    {
+        let privateKey = try PrivateKey(type: .P256KeyAgreement)
+        let publicKey = privateKey.publicKey
+
+        let serverConfig = try StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: privateKey)
+        let clientConfig = try StarbridgeClientConfig(serverAddress: serverAddress, serverPublicKey: publicKey)
+        
+        return (serverConfig, clientConfig)
+    }
+
+    static public func createNewConfigFiles(inDirectory saveDirectory: URL, serverAddress: String) throws
+    {
+        guard saveDirectory.hasDirectoryPath else
+        {
+            throw StarbridgeError.urlIsNotDirectory(urlPath: saveDirectory.path)
+        }
+
+        let configPair = try generateNewConfigPair(serverAddress: serverAddress)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        
+        let serverJson = try encoder.encode(configPair.serverConfig)
+        let serverConfigFilePath = saveDirectory.appendingPathComponent(StarbridgeServerConfig.serverConfigFilename).path
+        
+        guard FileManager.default.createFile(atPath: serverConfigFilePath, contents: serverJson) else
+        {
+            throw StarbridgeError.failedToSaveFile(filePath: serverConfigFilePath)
+        }
+
+        let clientJson = try encoder.encode(configPair.clientConfig)
+        let clientConfigFilePath = saveDirectory.appendingPathComponent(StarbridgeClientConfig.clientConfigFilename).path
+
+        guard FileManager.default.createFile(atPath: clientConfigFilePath, contents: clientJson) else
+        {
+            throw StarbridgeError.failedToSaveFile(filePath: clientConfigFilePath)
+        }
+    }
 }
 
 public class StarbridgeServerConfig: StarbridgeConfig, Equatable
@@ -166,44 +205,5 @@ public class StarbridgeClientConfig: StarbridgeConfig, Equatable
         try container.encode(serverPublicKey, forKey: .serverPublicKey)
         try container.encode(serverAddress, forKey: CodingKeys.serverAddress)
         try container.encode(transportName, forKey: .transportName)
-    }
-}
-
-public func generateNewConfigPair(serverAddress: String) throws -> (serverConfig: StarbridgeServerConfig, clientConfig: StarbridgeClientConfig)
-{
-    let privateKey = try PrivateKey(type: .P256KeyAgreement)
-    let publicKey = privateKey.publicKey
-
-    let serverConfig = try StarbridgeServerConfig(serverAddress: serverAddress, serverPrivateKey: privateKey)
-    let clientConfig = try StarbridgeClientConfig(serverAddress: serverAddress, serverPublicKey: publicKey)
-    
-    return (serverConfig, clientConfig)
-}
-
-public func createNewConfigFiles(inDirectory saveDirectory: URL, serverAddress: String) throws
-{
-    guard saveDirectory.hasDirectoryPath else
-    {
-        throw StarbridgeError.urlIsNotDirectory(urlPath: saveDirectory.path)
-    }
-
-    let configPair = try generateNewConfigPair(serverAddress: serverAddress)
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-    
-    let serverJson = try encoder.encode(configPair.serverConfig)
-    let serverConfigFilePath = saveDirectory.appendingPathComponent(StarbridgeServerConfig.serverConfigFilename).path
-    
-    guard FileManager.default.createFile(atPath: serverConfigFilePath, contents: serverJson) else
-    {
-        throw StarbridgeError.failedToSaveFile(filePath: serverConfigFilePath)
-    }
-
-    let clientJson = try encoder.encode(configPair.clientConfig)
-    let clientConfigFilePath = saveDirectory.appendingPathComponent(StarbridgeClientConfig.clientConfigFilename).path
-
-    guard FileManager.default.createFile(atPath: clientConfigFilePath, contents: clientJson) else
-    {
-        throw StarbridgeError.failedToSaveFile(filePath: clientConfigFilePath)
     }
 }
