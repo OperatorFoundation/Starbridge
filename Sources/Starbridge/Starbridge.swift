@@ -114,23 +114,3 @@ public class Starbridge
         }
     }
 }
-
-public enum StarbridgeError: Error
-{
-    case invalidConnection
-    case invalidConfig
-    case invalidServerPort(serverAddress: String)
-    
-    public var description: String
-    {
-        switch self
-        {
-        case .invalidConnection:
-            return "Failed to create a valid Starbridge connection."
-        case .invalidConfig:
-            return "Invalid config."
-        case .invalidServerPort(let serverAddress):
-            return "Error decoding Starbride config data: Invalid server port from address: \(serverAddress)"
-        }
-    }
-}
