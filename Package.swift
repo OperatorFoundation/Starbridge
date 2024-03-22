@@ -15,15 +15,22 @@ let package = Package(
             targets: ["Starbridge"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", from: "2.0.1"),
-        .package(url: "https://github.com/OperatorFoundation/Gardener", from: "0.1.1")
+        .package(url: "https://github.com/apple/swift-log", from: "1.5.4"),
+        
+        .package(url: "https://github.com/OperatorFoundation/Gardener", from: "0.1.2"),
+        .package(url: "https://github.com/OperatorFoundation/KeychainTypes", from: "1.0.2"),
+        .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", from: "2.0.2"),
+        .package(url: "https://github.com/OperatorFoundation/TransmissionAsync", from: "0.1.5"),
     ],
     targets: [
         .target(
             name: "Starbridge",
             dependencies: [
-            "ReplicantSwift",
             "Gardener",
+            "KeychainTypes",
+            "ReplicantSwift",
+            "TransmissionAsync",
+            .product(name: "Logging", package: "swift-log"),
             ]),
         .testTarget(
             name: "StarbridgeTests",

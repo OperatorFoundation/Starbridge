@@ -1,9 +1,12 @@
 //
-//  Starbridge.swift
+//  AsyncDarkstar.swift
 //  
 //
-//  Created by Joshua Clark on 6/27/22.
+//  Created by Mafalda on 3/4/24.
 //
+
+import Foundation
+
 
 import Crypto
 import Foundation
@@ -12,35 +15,33 @@ import Logging
 import Gardener
 import KeychainTypes
 import ReplicantSwift
-import Simulation
-import Spacetime
-import TransmissionTypes
-import Universe
+import TransmissionAsync
 
 public class Starbridge
 {
-    var logger: Logger
-    let simulation: Simulation
-    let universe: StarbridgeUniverse
+    let logger: Logger
 
     public init(logger: Logger)
     {
         self.logger = logger
-        let sim = Simulation(capabilities: Capabilities(.display, .random, .networkConnect, .networkListen))
-        self.simulation = sim
-        
-        // FIXME: Logger
-        self.universe = StarbridgeUniverse(effects: self.simulation.effects, events: self.simulation.events, logger: nil)
     }
 
-    public func listen(config: StarbridgeServerConfig) throws -> TransmissionTypes.Listener
+    public func listen(config: StarbridgeServerConfig) throws -> AsyncListener
     {
-        return try self.universe.starbridgeListen(config: config, logger: self.logger)
+        let serverToneburst = Starburst(.SMTPServer)
+        let polishServerConfig = PolishServerConfig(serverAddress: config.serverAddress, serverPrivateKey: config.serverPrivateKey)
+        let replicant = Replicant(logger: self.logger, polish: polishServerConfig, toneburst: serverToneburst)
+        return try ReplicantListener(replicant: replicant, serverIP: config.serverIP, serverPort: Int(config.serverPort), logger: self.logger)
     }
 
-    public func connect(config: StarbridgeClientConfig) throws -> TransmissionTypes.Connection
+    public func connect(config: StarbridgeClientConfig) async throws -> AsyncConnection
     {
-        return try self.universe.starbridgeConnect(config: config, self.logger)
+        let clientToneburst = Starburst(.SMTPClient)
+        let polishClientConfig = PolishClientConfig(serverAddress: config.serverAddress, serverPublicKey: config.serverPublicKey)
+        let replicant = Replicant(logger: self.logger, polish: polishClientConfig, toneburst: clientToneburst)
+        let network = try await AsyncTcpSocketConnection(config.serverIP, Int(config.serverPort), logger)
+
+        return try await replicant.replicantClientTransformation(connection: network)
     }
     
     /// Creates  a randomly generated P-256 and returns the hex format of their respective raw (data) representations. This is a format suitable for JSON config files.
@@ -113,4 +114,3 @@ public class Starbridge
         }
     }
 }
-
