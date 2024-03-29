@@ -13,8 +13,8 @@ import TransmissionAsync
 
 public enum StarburstMode: String, Codable
 {
-    case SMTPClient
     case SMTPServer
+    case SMTPClient
     
 }
 
@@ -72,10 +72,10 @@ public struct StarburstInstance
     {
         switch mode
         {
-            case .SMTPClient:
-                try await handleSMTPClient()
             case .SMTPServer:
                 try await handleSMTPServer()
+            case .SMTPClient:
+                try await handleSMTPClient()
             
         }
     }
@@ -126,33 +126,45 @@ public struct StarburstInstance
         }
     }
     
+
+    private func handleSMTPServer() async throws
+    {
+        try await self.speak(structuredText: StructuredText(TypedText.text("220 mail.imc.org SMTP service ready"), TypedText.newline(Newline.crlf)))
+        try await Timeout(Duration.seconds(10)).wait
+        {
+            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("EHLO mail.imc.org"), TypedText.newline(Newline.crlf)))
+        }
+
+        try await self.speak(structuredText: StructuredText(TypedText.text("250-mail.imc.org "), TypedText.text("offers a warm hug of welcome"), TypedText.newline(Newline.crlf), TypedText.text("250-8BITMIME"), TypedText.newline(Newline.crlf), TypedText.text("250-DSN"), TypedText.newline(Newline.crlf), TypedText.text("250-STARTTLS"), TypedText.newline(Newline.crlf)))
+        try await Timeout(Duration.seconds(10)).wait
+        {
+            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("STARTTLS"), TypedText.newline(Newline.crlf)))
+        }
+
+        try await self.speak(structuredText: StructuredText(TypedText.text("220 Go ahead"), TypedText.newline(Newline.crlf)))
+        return
+    }
+
     private func handleSMTPClient() async throws
     {
         try await Timeout(Duration.seconds(10)).wait
         {
-            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("220 "), TypedText.regexp("^([a-zA-Z0-9.-]+)"), TypedText.text(" SMTP service ready"), TypedText.newline(Newline.crlf)))
+            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("220 mail.imc.org SMTP service ready"), TypedText.newline(Newline.crlf)))
         }
 
         try await self.speak(structuredText: StructuredText(TypedText.text("EHLO mail.imc.org"), TypedText.newline(Newline.crlf)))
         try await Timeout(Duration.seconds(10)).wait
         {
-            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("250 STARTTLS"), TypedText.newline(Newline.crlf)))
+            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("250-mail.imc.org "), TypedText.text("offers a warm hug of welcome"), TypedText.newline(Newline.crlf), TypedText.text("250-8BITMIME"), TypedText.newline(Newline.crlf), TypedText.text("250-DSN"), TypedText.newline(Newline.crlf), TypedText.text("250-STARTTLS"), TypedText.newline(Newline.crlf)))
         }
 
         try await self.speak(structuredText: StructuredText(TypedText.text("STARTTLS"), TypedText.newline(Newline.crlf)))
         try await Timeout(Duration.seconds(10)).wait
         {
-            let _ = try await self.listen(structuredText: StructuredText(TypedText.regexp("^(.+)$"), TypedText.newline(Newline.crlf)))
+            let _ = try await self.listen(structuredText: StructuredText(TypedText.text("220 Go ahead"), TypedText.newline(Newline.crlf)))
         }
 
         return
-    }
-
-    // FIXME: Unimplemented
-    private func handleSMTPServer() async throws
-    {
-        try await self.speak(structuredText: StructuredText(TypedText.text("220 mail.imc.org SMTP service ready"), TypedText.newline(Newline.crlf)))
-        throw StarburstError.unimplemented
     }
 
 }
@@ -166,5 +178,4 @@ public enum StarburstError: Error
     case listenFailed
     case speakFailed
     case maxSizeReached
-    case unimplemented
 }
