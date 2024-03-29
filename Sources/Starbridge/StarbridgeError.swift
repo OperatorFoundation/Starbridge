@@ -2,7 +2,7 @@
 //  StarbridgeError.swift
 //
 //
-//  Created by Joseph Bragel on 3/20/24.
+//  Created by Mafalda on 3/4/24.
 //
 
 import Foundation

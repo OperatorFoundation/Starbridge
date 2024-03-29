@@ -1,4 +1,4 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "Starbridge",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v15),
+        .macOS(.v14),
+        .iOS(.v17),
     ],
     products: [
         .library(
@@ -17,6 +17,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-log", from: "1.5.4"),
         
+        .package(url: "https://github.com/OperatorFoundation/Antiphony", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/KeychainTypes", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/ReplicantSwift", branch: "main"),
@@ -26,11 +27,11 @@ let package = Package(
         .target(
             name: "Starbridge",
             dependencies: [
-            "Gardener",
-            "KeychainTypes",
-            "ReplicantSwift",
-            "TransmissionAsync",
-            .product(name: "Logging", package: "swift-log"),
+                "Antiphony",
+                "KeychainTypes",
+                "ReplicantSwift",
+                "TransmissionAsync",
+                .product(name: "Logging", package: "swift-log"),
             ]),
         .testTarget(
             name: "StarbridgeTests",
